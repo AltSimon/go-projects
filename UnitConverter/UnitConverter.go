@@ -3,6 +3,7 @@ package unitconverter
 import (
 	"fmt"
 	"log"
+	"math"
 )
 
 var TemperatureUnits = [][]string{
@@ -35,6 +36,10 @@ var VolumeUnitsToSI = map[string]float32{
 	"Pint":             1.0 / 2113.0,
 	"Cubic Metre":      1,
 	"Cubic Centimetre": 1e-6,
+}
+
+func round(value float64, precision int) float64 {
+	return math.Round(value*math.Pow10(precision)) / math.Pow10(precision)
 }
 
 func convertTemperature(value float32, unitIn string, unitOut string) float32 {
@@ -73,6 +78,7 @@ func convertTemperature(value float32, unitIn string, unitOut string) float32 {
 
 }
 
-func ConvertUnit(value float32) {
-
+func ConvertUnit(value float32, unitFrom string, unitTo string) float32 {
+	var result float32
+	return float32(round(float64(result), 3))
 }
