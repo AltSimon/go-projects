@@ -6,13 +6,13 @@ import (
 	"math"
 )
 
-var TemperatureUnits = [][]string{
-	{"Kelvin", "K"},
-	{"Celsius", "C"},
-	{"Fahrenheit", "F"},
+var TemperatureUnits = map[string][]string{
+	"Kelvin":     {"K"},
+	"Fahrenheit": {"F"},
+	"Celsius":    {"C"},
 }
 
-var DistanceUnitsToSI = map[string]float32{
+var DistanceUnitsToSI = map[string]float64{
 	"Kilometre":  1000,
 	"Hectometre": 100,
 	"Decametre":  10,
@@ -27,7 +27,7 @@ var DistanceUnitsToSI = map[string]float32{
 	"Inch":       127.0 / 5000.0,
 }
 
-var VolumeUnitsToSI = map[string]float32{
+var VolumeUnitsToSI = map[string]float64{
 	"Litre":            1.0 / 1000.0,
 	"Cubic Foot":       1000.0 / 35315.0,
 	"Gallon":           10.0 / 2642.0,
@@ -38,11 +38,19 @@ var VolumeUnitsToSI = map[string]float32{
 	"Cubic Centimetre": 1e-6,
 }
 
+func aliasToUnit(alias string) string {
+	return ""
+}
+
 func round(value float64, precision int) float64 {
 	return math.Round(value*math.Pow10(precision)) / math.Pow10(precision)
 }
 
-func convertTemperature(value float32, unitIn string, unitOut string) float32 {
+func convertNonTemperatureUnit(value float64, unitFrom string, unitTo string) float64 {
+	return 0
+}
+
+func convertTemperature(value float64, unitIn string, unitOut string) float64 {
 	if unitIn == unitOut {
 		fmt.Println("[WARNING] convertTemperature: same unit in and out")
 		return value
@@ -78,7 +86,25 @@ func convertTemperature(value float32, unitIn string, unitOut string) float32 {
 
 }
 
-func ConvertUnit(value float32, unitFrom string, unitTo string) float32 {
-	var result float32
-	return float32(round(float64(result), 3))
+func isTemperatureUnit(unit string) bool {
+	if unit == "Fahrenheit" {
+		return true
+	}
+	if unit == "Kelvin" {
+		return true
+	}
+	if unit == "Celsius" {
+		return true
+	}
+	return false
+}
+
+func ConvertUnit(value float64, unitFrom string, unitTo string) float64 {
+	var result float64
+	if isTemperatureUnit(unitFrom) {
+		result = convertTemperature(value, unitFrom, unitTo)
+	} else {
+		result = convertNonTemperatureUnit(value, unitFrom, unitTo)
+	}
+	return round(result, 3)
 }
